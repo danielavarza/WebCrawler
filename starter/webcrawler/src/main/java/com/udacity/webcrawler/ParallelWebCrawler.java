@@ -58,10 +58,18 @@ final class ParallelWebCrawler implements WebCrawler {
       pool.invoke(new CrawlTask(maxDepth, deadline, url, counts, visitedUrls));
     }
 
-    // Return the Crawl Result
+    // Same in the SequentialWebCrawler, the result shall be sorted out
+    if (counts.isEmpty()) {
+      return new CrawlResult.Builder()
+              .setWordCounts(counts)
+              .setUrlsVisited(visitedUrls.size())
+              .build();
+    }
+
     return new CrawlResult.Builder()
+            .setWordCounts(WordCounts.sort(counts, popularWordCount))
             .setUrlsVisited(visitedUrls.size())
-            .setWordCounts(counts).build();
+            .build();
   }
 
   /**
