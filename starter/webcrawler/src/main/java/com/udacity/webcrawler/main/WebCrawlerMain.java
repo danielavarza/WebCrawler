@@ -52,7 +52,9 @@ public final class WebCrawlerMain {
     }
     else {
       // Convert System.out to OutputStreamWriter to be compatible
-      profiler.writeData(new java.io.OutputStreamWriter(System.out));
+      Writer outputWriter = new OutputStreamWriter(System.out);
+      profiler.writeData(outputWriter);
+      outputWriter.close();
     }
   }
 
