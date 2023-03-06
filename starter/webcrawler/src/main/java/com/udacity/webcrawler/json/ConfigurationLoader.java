@@ -52,6 +52,9 @@ public final class ConfigurationLoader {
 
     // Create an instance of ObjectMapper to read the JSON string
     ObjectMapper objectMapper = new ObjectMapper();
+
+    // Because the reader is closed in the load method
+    // This prevents for closing before using it.
     objectMapper.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
 
     return objectMapper.readValue(reader, CrawlerConfiguration.Builder.class).build();
