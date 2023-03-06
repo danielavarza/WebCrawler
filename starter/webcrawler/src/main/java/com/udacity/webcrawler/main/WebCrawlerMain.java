@@ -57,6 +57,7 @@ public final class WebCrawlerMain {
       Writer outputWriter = new OutputStreamWriter(System.out);
       profiler.writeData(outputWriter);
       outputWriter.flush();
+      outputWriter.close();
     }
   }
 
