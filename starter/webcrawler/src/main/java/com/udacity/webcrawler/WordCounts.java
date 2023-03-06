@@ -28,8 +28,7 @@ final class WordCounts {
    */
   static Map<String, Integer> sort(Map<String, Integer> wordCounts, int popularWordCount) {
 
-    // TODO: Reimplement this method using only the Stream API and lambdas and/or method references.
-    // collect statement: https://stackoverflow.com/questions/29567575/sort-map-by-value-using-lambdas-and-streams
+    // collect statement support: https://stackoverflow.com/questions/29567575/sort-map-by-value-using-lambdas-and-streams
     // using limit option to limit the stream size
     // sort using the compare() method from WordCountComparator class.
 
@@ -40,13 +39,14 @@ final class WordCounts {
                     (x, y) -> x, LinkedHashMap::new));
 
     // Tried with multiple comparing statements - Not Working
-//    return wordCounts.entrySet().stream()
-//            .sorted(Comparator.comparing(Map.Entry<String, Integer>::getValue)
-//                    .thenComparing(Map.Entry::getKey)
-//                    .thenComparing(Comparator.comparing(Object::toString)))
-//            .limit(Math.min(popularWordCount, wordCounts.size()))
-//            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-//                    (x, y) -> x, LinkedHashMap::new));
+    /* return wordCounts.entrySet().stream()
+            .sorted(Comparator.comparing(Map.Entry<String, Integer>::getValue)
+                    .thenComparing(Map.Entry::getKey)
+                    .thenComparing(Comparator.comparing(Object::toString)))
+            .limit(Math.min(popularWordCount, wordCounts.size()))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                    (x, y) -> x, LinkedHashMap::new));
+     */
   }
 
   /**
