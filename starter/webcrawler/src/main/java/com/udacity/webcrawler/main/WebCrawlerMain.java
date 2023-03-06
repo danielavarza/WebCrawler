@@ -42,8 +42,10 @@ public final class WebCrawlerMain {
       resultWriter.write(Path.of(config.getResultPath()));
     }
     else {
-      // Convert System.out to OutputStreamWriter to be compatible
-      resultWriter.write(new java.io.OutputStreamWriter(System.out));
+      // Convert System.out to OutputStreamWriter to be
+      Writer outputWriter = new OutputStreamWriter(System.out);
+      resultWriter.write(outputWriter);
+      outputWriter.flush();
     }
 
     // Write the profile data to a text file (or System.out if the file name is empty)
@@ -54,7 +56,7 @@ public final class WebCrawlerMain {
       // Convert System.out to OutputStreamWriter to be compatible
       Writer outputWriter = new OutputStreamWriter(System.out);
       profiler.writeData(outputWriter);
-      outputWriter.close();
+      outputWriter.flush();
     }
   }
 
