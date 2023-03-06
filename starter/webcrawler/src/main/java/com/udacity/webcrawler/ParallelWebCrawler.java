@@ -106,20 +106,27 @@ final class ParallelWebCrawler implements WebCrawler {
           return;
         }
       }
-      if (visitedUrls.contains(url)) {
+
+      // Combined to be thread-safe as suggested in the review
+      if (!visitedUrls.add(url)) {
         return;
       }
 
-      visitedUrls.add(url);
       PageParser.Result result = pageParserFactory.get(url).parse();
 
-      for (ConcurrentMap.Entry<String, Integer> e : result.getWordCounts().entrySet()) {
-        if (counts.containsKey(e.getKey())) {
-          counts.put(e.getKey(), e.getValue() + counts.get(e.getKey()));
-        } else {
-          counts.put(e.getKey(), e.getValue());
-        }
+      // Changed to lambda in order to be thread-safe
+      for (ConcurrentMap.Entry<String, Integer> s : result.getWordCounts().entrySet()) {
+        counts.compute(s.getKey(), (key, value) -> (value != null) ? s.getValue() + value : s.getValue());
       }
+
+        // Not thread-safe
+//      for (ConcurrentMap.Entry<String, Integer> e : result.getWordCounts().entrySet()) {
+//        if (counts.containsKey(e.getKey())) {
+//          counts.put(e.getKey(), e.getValue() + counts.get(e.getKey()));
+//        } else {
+//          counts.put(e.getKey(), e.getValue());
+//        }
+//      }
 
       // Create a list of crawl tasks and then invoke all to be processed.
       List<CrawlTask> crawlTasks = new ArrayList<>();

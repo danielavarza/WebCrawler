@@ -59,18 +59,23 @@ final class ProfilerImpl implements Profiler {
 
     // Create the handler to return the proxy object
     InvocationHandler handler = new ProfilingMethodInterceptor(clock, delegate, state);
-    return (T) Proxy.newProxyInstance(klass.getClassLoader(), new Class[]{klass}, handler);
+
+    @SuppressWarnings("unchecked")
+    T proxy = (T) Proxy.newProxyInstance(klass.getClassLoader(), new Class[]{klass}, handler);
+    return (T) proxy;
   }
 
   @Override
-  public void writeData(Path path) throws IOException {
+  public void writeData(Path path) {
     // Using standard options to avoid checking the existence of the file
-      Writer writer = Files.newBufferedWriter(path,
+      try(Writer writer = Files.newBufferedWriter(path,
                       StandardOpenOption.CREATE,
                       StandardOpenOption.WRITE,
-                      StandardOpenOption.APPEND);
-      writeData(writer);
-      writer.close();
+                      StandardOpenOption.APPEND)) {
+        writeData(writer);
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
   }
 
   @Override
